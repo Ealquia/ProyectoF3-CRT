@@ -147,19 +147,23 @@ def draw_front_view(screen, font, title, rect, points_on_screen, current_point):
     """Dibuja la pantalla del CRT con el rastro de persistencia."""
     pygame.draw.rect(screen, VIEW_BG_COLOR, rect); pygame.draw.rect(screen, VIEW_BORDER_COLOR, rect, 2)
     screen.blit(font.render(title, True, TEXT_COLOR), (rect.x + 10, rect.y + 5))
+    margin = 10
+    inner_rect = pygame.Rect(rect.x + margin, rect.y + margin + 25, rect.width - 2*margin, rect.height - 2*margin - 25)
     
     # Dibuja los puntos antiguos (la persistencia)
     for point in points_on_screen:
-        # Los puntos ya están en coordenadas locales, solo hay que añadir el offset del 'rect'
-        final_pos = (point[0] + rect.x, point[1] + rect.y)
-        if rect.collidepoint(final_pos):
-            pygame.draw.circle(screen, BEAM_COLOR, final_pos, 2)
+        # Los puntos ya están en coordenadas absolutas
+        if inner_rect.collidepoint(point):
+            pygame.draw.circle(screen, BEAM_COLOR, (int(point[0]), int(point[1])), 2)
     
     # Dibuja el punto de impacto actual más brillante
     if current_point:
-        current_pos = (current_point[0] + rect.x, current_point[1] + rect.y)
-        if rect.collidepoint(current_pos):
-            pygame.draw.circle(screen, CURRENT_IMPACT_COLOR, current_pos, 4)
+        if inner_rect.collidepoint(current_point):
+            pygame.draw.circle(screen, CURRENT_IMPACT_COLOR, (int(current_point[0]), int(current_point[1])), 4)
+
+    center_x, center_y = inner_rect.centerx, inner_rect.centery
+    pygame.draw.line(screen, (30, 30, 60), (center_x, inner_rect.top), (center_x, inner_rect.bottom), 1)
+    pygame.draw.line(screen, (30, 30, 60), (inner_rect.left, center_y), (inner_rect.right, center_y), 1)
 
 def main():
     pygame.init()
@@ -170,10 +174,10 @@ def main():
     
     crt_physics = CRT()
     
-    # Definición de las áreas de dibujo
-    side_rect = pygame.Rect(50, 50, 950, 200)
-    top_rect = pygame.Rect(50, side_rect.bottom + 20, 950, 200)
-    front_rect = pygame.Rect(50, top_rect.bottom + 20, 450, 450)
+    # Definición de las áreas de dibujo - Movidas hacia arriba para evitar la barra de tareas
+    side_rect = pygame.Rect(50, 30, 950, 180)
+    top_rect = pygame.Rect(50, side_rect.bottom + 15, 950, 180)
+    front_rect = pygame.Rect(50, top_rect.bottom + 15, 400, 400)
 
     # Controles de la UI (Interfaz de Usuario)
     sliders = {
@@ -227,11 +231,21 @@ def main():
         max_deflect_m = crt_physics.calculate_max_deflection(Va, sliders["V_amp"].max_val)
         if max_deflect_m < 1e-9: max_deflect_m = PLATE_SEPARATION
         
-        front_view_scale = (front_rect.width / 2) * 0.9 / max_deflect_m
+        # Definir área interna con márgenes (debe coincidir con draw_front_view)
+        margin = 10
+        inner_width = front_rect.width - 2*margin
+        inner_height = front_rect.height - 2*margin - 25  # 25 para el título
+        
+        # Escala basada en el área interna disponible
+        front_view_scale = (min(inner_width, inner_height) / 2) * 0.9 / max_deflect_m
         
         final_point_m = trajectory[-1]
-        pixel_z = front_rect.width / 2 + final_point_m[2] * front_view_scale
-        pixel_y = front_rect.height / 2 - final_point_m[1] * front_view_scale
+        # Calcular coordenadas absolutas centradas en el área interna
+        center_x = front_rect.x + margin + inner_width / 2
+        center_y = front_rect.y + margin + 25 + inner_height / 2
+        
+        pixel_z = center_x + final_point_m[2] * front_view_scale
+        pixel_y = center_y - final_point_m[1] * front_view_scale
         
         current_point = (pixel_z, pixel_y)
         points_on_screen.append(current_point)
