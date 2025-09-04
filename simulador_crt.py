@@ -2,15 +2,15 @@ import pygame
 import numpy as np
 
 # --- CONSTANTES FÍSICAS Y DE SIMULACIÓN ---
-E_CHARGE = 1.602e-19
-E_MASS = 9.109e-31
+E_CHARGE = 1.602e-19 # carga del electrón
+E_MASS = 9.109e-31 # masa del electrón 
 
 # --- PARÁMETROS GEOMÉTRICOS DEL CRT (en metros) ---
 # Se ajustaron ligeramente para una mejor proporción visual
-GUN_TO_PLATES_DIST = 0.05
-DEFLECT_PLATE_LENGTH = 0.05
-PLATE_TO_SCREEN_DIST = 0.25 # Ligeramente más corto para que la deflexión sea más pronunciada
-PLATE_SEPARATION = 0.01
+GUN_TO_PLATES_DIST = 0.05 # Distancia del cañón a las placas de deflexión
+DEFLECT_PLATE_LENGTH = 0.05 # Longitud de las placas de deflexión
+PLATE_TO_SCREEN_DIST = 0.25 # Distancia de las placas a la pantalla
+PLATE_SEPARATION = 0.01 # Separación entre las placas
 TOTAL_LENGTH = GUN_TO_PLATES_DIST + DEFLECT_PLATE_LENGTH + PLATE_TO_SCREEN_DIST
 
 # --- CONFIGURACIÓN DE LA PANTALLA Y LA INTERFAZ ---
@@ -84,14 +84,14 @@ class CRT:
                 pass
             elif x <= GUN_TO_PLATES_DIST + DEFLECT_PLATE_LENGTH:
                 # Dentro de las placas, movimiento parabólico
-                t_in_plates = (x - GUN_TO_PLATES_DIST) / v_x
-                y = 0.5 * a_vertical * t_in_plates**2
-                z = 0.5 * a_horizontal * t_in_plates**2
+                t_in_plates = (x - GUN_TO_PLATES_DIST) / v_x # timpo dentro de las placas
+                y = 0.5 * a_vertical * t_in_plates**2 # deflexión vertical
+                z = 0.5 * a_horizontal * t_in_plates**2 # deflexión horizontal
             else:
                 # Después de las placas, movimiento rectilíneo
-                t_drift = (x - (GUN_TO_PLATES_DIST + DEFLECT_PLATE_LENGTH)) / v_x
-                y = y_exit + vy_exit * t_drift
-                z = z_exit + vz_exit * t_drift
+                t_drift = (x - (GUN_TO_PLATES_DIST + DEFLECT_PLATE_LENGTH)) / v_x # tiempo en llegar a la pantalla
+                y = y_exit + vy_exit * t_drift # coordenada final vertical
+                z = z_exit + vz_exit * t_drift # coordenada final horizontal
             trajectory.append((x, y, z))
         return trajectory
 
