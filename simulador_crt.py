@@ -5,6 +5,7 @@ import numpy as np
 E_CHARGE = 1.602e-19 # carga del electrón
 E_MASS = 9.109e-31 # masa del electrón 
 
+pygame.init()
 # --- PARÁMETROS GEOMÉTRICOS DEL CRT (en metros) ---
 # Se ajustaron ligeramente para una mejor proporción visual
 GUN_TO_PLATES_DIST = 0.05 # Distancia del cañón a las placas de deflexión
@@ -14,8 +15,9 @@ PLATE_SEPARATION = 0.01 # Separación entre las placas
 TOTAL_LENGTH = GUN_TO_PLATES_DIST + DEFLECT_PLATE_LENGTH + PLATE_TO_SCREEN_DIST
 
 # --- CONFIGURACIÓN DE LA PANTALLA Y LA INTERFAZ ---
-SCREEN_WIDTH, SCREEN_HEIGHT = 1600, 900 # Aumentada la altura para mejor espaciado
-UI_X_START = 1050
+info = pygame.display.Info()
+SCREEN_WIDTH, SCREEN_HEIGHT = info.current_w, info.current_h # Aumentada la altura para mejor espaciado
+UI_X_START = int(SCREEN_WIDTH * 0.65)
 UI_WIDTH = SCREEN_WIDTH - UI_X_START - 50
 BG_COLOR = (10, 10, 30)
 TEXT_COLOR = (220, 220, 255)
@@ -64,10 +66,10 @@ class CRT:
         if Va <= 0: return [(x, 0, 0) for x in np.linspace(0, TOTAL_LENGTH, num_points)]
         
         v_x = np.sqrt(2 * E_CHARGE * Va / E_MASS)
-        a_vertical = (E_CHARGE * (Vv / PLATE_SEPARATION)) / E_MASS
+        a_vertical = (E_CHARGE * (Vv / PLATE_SEPARATION)) / E_MASS 
         a_horizontal = (E_CHARGE * (Vh / PLATE_SEPARATION)) / E_MASS
-        
-        trajectory = []
+
+        trajectory = [] # lista de para las coordenadas (x, y, z)
         x_coords = np.linspace(0, TOTAL_LENGTH, num_points)
 
         # Tiempos y posiciones/velocidades clave
@@ -171,23 +173,23 @@ def main():
     crt_physics = CRT()
     
     # Definición de las áreas de dibujo
-    side_rect = pygame.Rect(50, 50, 950, 200)
-    top_rect = pygame.Rect(50, side_rect.bottom + 20, 950, 200)
-    front_rect = pygame.Rect(50, top_rect.bottom + 20, 450, 450)
+    side_rect = pygame.Rect(50, 50, int(SCREEN_WIDTH * 0.6), int(SCREEN_HEIGHT * 0.2))
+    top_rect = pygame.Rect(50, side_rect.bottom + 20, side_rect.width, side_rect.height)
+    front_rect = pygame.Rect(50, top_rect.bottom + 20, int(SCREEN_WIDTH * 0.3), int(SCREEN_HEIGHT * 0.4))
 
     # Controles de la UI (Interfaz de Usuario)
     sliders = {
-        "Va": Slider(UI_X_START, 50, UI_WIDTH, 10, 100, 2000, 1000, "Voltaje Aceleración (V)"),
-        "V_amp": Slider(UI_X_START, 120, UI_WIDTH, 10, 0, 150, 100, "Amplitud Voltaje (V)"),
-        "freq_h": Slider(UI_X_START, 220, UI_WIDTH, 10, 1.0, 5.0, 1.0, "Frecuencia Horizontal (a)"),
-        "freq_v": Slider(UI_X_START, 290, UI_WIDTH, 10, 1.0, 5.0, 1.0, "Frecuencia Vertical (b)"),
-        "phase": Slider(UI_X_START, 360, UI_WIDTH, 10, 0, 2*np.pi, 0.0, "Desfase (δ)"), # Valor inicial es 0.0
-        "persistence": Slider(UI_X_START, 460, UI_WIDTH, 10, 10, 500, 250, "Persistencia (puntos)"),
-        "Vv_manual": Slider(UI_X_START, 600, UI_WIDTH, 10, -150, 150, 0, "Voltaje Vertical (Manual)"),
-        "Vh_manual": Slider(UI_X_START, 670, UI_WIDTH, 10, -150, 150, 0, "Voltaje Horizontal (Manual)"),
+        "Va": Slider(UI_X_START, SCREEN_HEIGHT*0.1, UI_WIDTH, 10, 2000, 3000, 2000, "Voltaje Aceleración (V)"),
+        "V_amp": Slider(UI_X_START, SCREEN_HEIGHT*0.2, UI_WIDTH, 10, 0, 140, 100, "Amplitud Voltaje (V)"),
+        "freq_h": Slider(UI_X_START, SCREEN_HEIGHT*0.3, UI_WIDTH, 10, 1.0, 5.0, 1.0, "Frecuencia Horizontal (a)"),
+        "freq_v": Slider(UI_X_START, SCREEN_HEIGHT*0.4, UI_WIDTH, 10, 1.0, 5.0, 1.0, "Frecuencia Vertical (b)"),
+        "phase": Slider(UI_X_START, SCREEN_HEIGHT*0.5, UI_WIDTH, 10, 0, 2*np.pi, 0.0, "Desfase (δ)"), # Valor inicial es 0.0
+        "persistence": Slider(UI_X_START, SCREEN_HEIGHT*0.6, UI_WIDTH, 10, 10, 500, 250, "Persistencia (puntos)"),
+        "Vv_manual": Slider(UI_X_START, SCREEN_HEIGHT*0.7, UI_WIDTH, 10, -150, 150, 0, "Voltaje Vertical (Manual)"),
+        "Vh_manual": Slider(UI_X_START, SCREEN_HEIGHT*0.8, UI_WIDTH, 10, -150, 150, 0, "Voltaje Horizontal (Manual)"),
     }
-    btn_manual = Button(UI_X_START, 750, 120, 40, "Manual", (0, 100, 200))
-    btn_sinusoidal = Button(UI_X_START + 140, 750, 120, 40, "Sinusoidal", (200, 50, 0))
+    btn_manual = Button(UI_X_START, int(SCREEN_HEIGHT*0.9), 120, 40, "Manual", (0, 100, 200))
+    btn_sinusoidal = Button(UI_X_START + 140, int(SCREEN_HEIGHT*0.9), 120, 40, "Sinusoidal", (200, 50, 0))
     mode = "Sinusoidal"
 
     points_on_screen = []
