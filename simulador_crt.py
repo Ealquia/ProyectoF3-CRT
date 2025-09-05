@@ -147,7 +147,7 @@ def draw_side_view(screen, font, title, rect, trajectory, view_type, max_deflect
 
 def draw_front_view(screen, font, title, rect, points_on_screen, current_point):
     """Dibuja la pantalla del CRT con el rastro de persistencia."""
-    pygame.draw.rect(screen, VIEW_BG_COLOR, rect); pygame.draw.rect(screen, VIEW_BORDER_COLOR, rect, 2)
+    pygame.draw.rect(screen, VIEW_BG_COLOR, rect, border_radius=60); pygame.draw.rect(screen, VIEW_BORDER_COLOR, rect, 2, border_radius=60)
     screen.blit(font.render(title, True, TEXT_COLOR), (rect.x + 10, rect.y + 5))
     
     # Dibuja los puntos antiguos (la persistencia)
@@ -179,8 +179,8 @@ def main():
 
     # Controles de la UI (Interfaz de Usuario)
     sliders = {
-        "Va": Slider(UI_X_START, SCREEN_HEIGHT*0.1, UI_WIDTH, 10, 2000, 3000, 2000, "Voltaje Aceleración (V)"),
-        "V_amp": Slider(UI_X_START, SCREEN_HEIGHT*0.2, UI_WIDTH, 10, 0, 140, 100, "Amplitud Voltaje (V)"),
+        "Va": Slider(UI_X_START, SCREEN_HEIGHT*0.1, UI_WIDTH, 10, 2000, 3000, 2000, "Voltaje Aceleración (V)"), # Valor inicial es 2000V
+        "V_amp": Slider(UI_X_START, SCREEN_HEIGHT*0.2, UI_WIDTH, 10, 0, 140, 100, "Amplitud Voltaje (V)"), 
         "freq_h": Slider(UI_X_START, SCREEN_HEIGHT*0.3, UI_WIDTH, 10, 1.0, 5.0, 1.0, "Frecuencia Horizontal (a)"),
         "freq_v": Slider(UI_X_START, SCREEN_HEIGHT*0.4, UI_WIDTH, 10, 1.0, 5.0, 1.0, "Frecuencia Vertical (b)"),
         "phase": Slider(UI_X_START, SCREEN_HEIGHT*0.5, UI_WIDTH, 10, 0, 2*np.pi, 0.0, "Desfase (δ)"), # Valor inicial es 0.0
