@@ -198,8 +198,8 @@ def main():
     
     # Definición de las áreas de dibujo
     side_rect = pygame.Rect(50, 50, int(SCREEN_WIDTH * 0.6), int(SCREEN_HEIGHT * 0.2))
-    top_rect = pygame.Rect(50, side_rect.bottom + 20, side_rect.width, side_rect.height)
-    front_rect = pygame.Rect(50, top_rect.bottom + 20, int(SCREEN_WIDTH * 0.3), int(SCREEN_HEIGHT * 0.4))
+    top_rect = pygame.Rect(50, side_rect.bottom + 20, int(SCREEN_WIDTH * 0.6), int(SCREEN_HEIGHT * 0.2))
+    front_rect = pygame.Rect(50, top_rect.bottom + 20, int(SCREEN_HEIGHT * 0.4), int(SCREEN_HEIGHT * 0.4))
 
     # Controles de la UI (Interfaz de Usuario)
     sliders = {
@@ -246,8 +246,8 @@ def main():
             freq_v = sliders["freq_v"].val # Frecuencia 'b'
             phase = sliders["phase"].val  # Desfase 'δ'
 
-            Vh = amp * np.cos(2 * np.pi * freq_h * sim_time + phase)
-            Vv = amp * np.cos(2 * np.pi * freq_v * sim_time )
+            Vh = amp * np.cos(2 * np.pi * freq_h * sim_time )
+            Vv = amp * np.cos(2 * np.pi * freq_v * sim_time + phase)
 
         # --- CÁLCULOS FÍSICOS Y DE ESCALA ---
         trajectory = crt_physics.calculate_trajectory(Va, Vh, Vv)
