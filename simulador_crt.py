@@ -202,16 +202,16 @@ def main():
     front_rect = pygame.Rect(int(SCREEN_WIDTH*0.025), int(SCREEN_HEIGHT*0.5), float(SCREEN_WIDTH * 0.3), float(SCREEN_HEIGHT * 0.4))
 
     # Controles de la UI (Interfaz de Usuario)
-    a=0.8
+    a=1.2
     sliders = {
-        "Va": Slider(UI_X_START, SCREEN_HEIGHT*0.1, UI_WIDTH*a, 10, 2000, 3000, 2000, "Voltaje Aceleración (V)"), # Valor inicial es 2000V
-        "V_amp": Slider(UI_X_START, SCREEN_HEIGHT*0.2, UI_WIDTH*a, 10, 0, 140, 100, "Amplitud Voltaje (V)"), 
-        "freq_h": Slider(UI_X_START, SCREEN_HEIGHT*0.3, UI_WIDTH*a, 10, 1.0, 5.0, 1.0, "Frecuencia Horizontal (a)"),
-        "freq_v": Slider(UI_X_START, SCREEN_HEIGHT*0.4, UI_WIDTH*a, 10, 1.0, 5.0, 1.0, "Frecuencia Vertical (b)"),
-        "phase": Slider(UI_X_START, SCREEN_HEIGHT*0.5, UI_WIDTH*a, 10, 0, 2*np.pi, 0.0, "Desfase (δ)"), # Valor inicial es 0.0
-        "persistence": Slider(UI_X_START, SCREEN_HEIGHT*0.6, UI_WIDTH*a, 10, 10, 500, 250, "Persistencia (puntos)"),
-        "Vv_manual": Slider(UI_X_START, SCREEN_HEIGHT*0.7, UI_WIDTH*a, 10, -150, 150, 0, "Voltaje Vertical (Manual)"),
-        "Vh_manual": Slider(UI_X_START, SCREEN_HEIGHT*0.8, UI_WIDTH*a, 10, -150, 150, 0, "Voltaje Horizontal (Manual)"),
+        "Va": Slider(UI_X_START*0.7, SCREEN_HEIGHT*0.1, UI_WIDTH*a, 10, 2000, 3000, 2000, "Voltaje Aceleración (V)"), # Valor inicial es 2000V
+        "V_amp": Slider(UI_X_START*0.7, SCREEN_HEIGHT*0.2, UI_WIDTH*a, 10, 0, 140, 100, "Amplitud Voltaje (V)"), 
+        "freq_h": Slider(UI_X_START*0.7, SCREEN_HEIGHT*0.3, UI_WIDTH*a, 10, 1.0, 5.0, 1.0, "Frecuencia Horizontal (a)"),
+        "freq_v": Slider(UI_X_START*0.7, SCREEN_HEIGHT*0.4, UI_WIDTH*a, 10, 1.0, 5.0, 1.0, "Frecuencia Vertical (b)"),
+        "phase": Slider(UI_X_START*0.7, SCREEN_HEIGHT*0.5, UI_WIDTH*a, 10, 0, 2*np.pi, 0.0, "Desfase (δ)"), # Valor inicial es 0.0
+        "persistence": Slider(UI_X_START*0.7, SCREEN_HEIGHT*0.6, UI_WIDTH*a, 10, 10, 500, 250, "Persistencia (puntos)"),
+        "Vv_manual": Slider(UI_X_START*0.7, SCREEN_HEIGHT*0.7, UI_WIDTH*a, 10, -150, 150, 0, "Voltaje Vertical (Manual)"),
+        "Vh_manual": Slider(UI_X_START*0.7, SCREEN_HEIGHT*0.8, UI_WIDTH*a, 10, -150, 150, 0, "Voltaje Horizontal (Manual)"),
     }
     btn_manual = Button(UI_X_START, int(SCREEN_HEIGHT*0.9), 120, 40, "Manual", (0, 100, 200))
     btn_sinusoidal = Button(UI_X_START + 140, int(SCREEN_HEIGHT*0.9), 120, 40, "Sinusoidal", (200, 50, 0))
