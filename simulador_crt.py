@@ -17,7 +17,7 @@ TOTAL_LENGTH = GUN_TO_PLATES_DIST + DEFLECT_PLATE_LENGTH + PLATE_TO_SCREEN_DIST
 # --- CONFIGURACIÓN DE LA PANTALLA Y LA INTERFAZ ---
 info = pygame.display.Info()
 SCREEN_WIDTH, SCREEN_HEIGHT = info.current_w, info.current_h # Aumentada la altura para mejor espaciado
-UI_X_START = int(SCREEN_WIDTH * 0.65)
+UI_X_START = 1050
 UI_WIDTH = SCREEN_WIDTH - UI_X_START - 50
 BG_COLOR = (10, 10, 30)
 TEXT_COLOR = (220, 220, 255)
@@ -189,7 +189,7 @@ def draw_front_view(screen, font, title, rect, points_on_screen, current_point, 
 
 def main():
     pygame.init()
-    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    screen = pygame.display.set_mode((SCREEN_WIDTH*0.9, SCREEN_HEIGHT*0.9))
     pygame.display.set_caption("Simulador de Tubo de Rayos Catódicos (CRT) - Versión Verificada")
     font = pygame.font.SysFont("sans", 20)
     clock = pygame.time.Clock()
@@ -197,20 +197,21 @@ def main():
     crt_physics = CRT()
     
     # Definición de las áreas de dibujo
-    side_rect = pygame.Rect(50, 50, int(SCREEN_WIDTH * 0.6), int(SCREEN_HEIGHT * 0.2))
-    top_rect = pygame.Rect(50, side_rect.bottom + 20, int(SCREEN_WIDTH * 0.6), int(SCREEN_HEIGHT * 0.2))
-    front_rect = pygame.Rect(50, top_rect.bottom + 20, float(SCREEN_WIDTH * 0.3), float(SCREEN_HEIGHT * 0.4))
+    side_rect = pygame.Rect(int(SCREEN_WIDTH*0.025), int(SCREEN_HEIGHT*0.025), int(SCREEN_WIDTH * 0.5), int(SCREEN_HEIGHT * 0.2))
+    top_rect = pygame.Rect(int(SCREEN_WIDTH*0.025), int(SCREEN_HEIGHT*0.25), int(SCREEN_WIDTH * 0.5), int(SCREEN_HEIGHT * 0.2))
+    front_rect = pygame.Rect(int(SCREEN_WIDTH*0.025), int(SCREEN_HEIGHT*0.5), float(SCREEN_WIDTH * 0.3), float(SCREEN_HEIGHT * 0.4))
 
     # Controles de la UI (Interfaz de Usuario)
+    a=0.8
     sliders = {
-        "Va": Slider(UI_X_START, SCREEN_HEIGHT*0.1, UI_WIDTH, 10, 2000, 3000, 2000, "Voltaje Aceleración (V)"), # Valor inicial es 2000V
-        "V_amp": Slider(UI_X_START, SCREEN_HEIGHT*0.2, UI_WIDTH, 10, 0, 140, 100, "Amplitud Voltaje (V)"), 
-        "freq_h": Slider(UI_X_START, SCREEN_HEIGHT*0.3, UI_WIDTH, 10, 1.0, 5.0, 1.0, "Frecuencia Horizontal (a)"),
-        "freq_v": Slider(UI_X_START, SCREEN_HEIGHT*0.4, UI_WIDTH, 10, 1.0, 5.0, 1.0, "Frecuencia Vertical (b)"),
-        "phase": Slider(UI_X_START, SCREEN_HEIGHT*0.5, UI_WIDTH, 10, 0, 2*np.pi, 0.0, "Desfase (δ)"), # Valor inicial es 0.0
-        "persistence": Slider(UI_X_START, SCREEN_HEIGHT*0.6, UI_WIDTH, 10, 10, 500, 250, "Persistencia (puntos)"),
-        "Vv_manual": Slider(UI_X_START, SCREEN_HEIGHT*0.7, UI_WIDTH, 10, -150, 150, 0, "Voltaje Vertical (Manual)"),
-        "Vh_manual": Slider(UI_X_START, SCREEN_HEIGHT*0.8, UI_WIDTH, 10, -150, 150, 0, "Voltaje Horizontal (Manual)"),
+        "Va": Slider(UI_X_START, SCREEN_HEIGHT*0.1, UI_WIDTH*a, 10, 2000, 3000, 2000, "Voltaje Aceleración (V)"), # Valor inicial es 2000V
+        "V_amp": Slider(UI_X_START, SCREEN_HEIGHT*0.2, UI_WIDTH*a, 10, 0, 140, 100, "Amplitud Voltaje (V)"), 
+        "freq_h": Slider(UI_X_START, SCREEN_HEIGHT*0.3, UI_WIDTH*a, 10, 1.0, 5.0, 1.0, "Frecuencia Horizontal (a)"),
+        "freq_v": Slider(UI_X_START, SCREEN_HEIGHT*0.4, UI_WIDTH*a, 10, 1.0, 5.0, 1.0, "Frecuencia Vertical (b)"),
+        "phase": Slider(UI_X_START, SCREEN_HEIGHT*0.5, UI_WIDTH*a, 10, 0, 2*np.pi, 0.0, "Desfase (δ)"), # Valor inicial es 0.0
+        "persistence": Slider(UI_X_START, SCREEN_HEIGHT*0.6, UI_WIDTH*a, 10, 10, 500, 250, "Persistencia (puntos)"),
+        "Vv_manual": Slider(UI_X_START, SCREEN_HEIGHT*0.7, UI_WIDTH*a, 10, -150, 150, 0, "Voltaje Vertical (Manual)"),
+        "Vh_manual": Slider(UI_X_START, SCREEN_HEIGHT*0.8, UI_WIDTH*a, 10, -150, 150, 0, "Voltaje Horizontal (Manual)"),
     }
     btn_manual = Button(UI_X_START, int(SCREEN_HEIGHT*0.9), 120, 40, "Manual", (0, 100, 200))
     btn_sinusoidal = Button(UI_X_START + 140, int(SCREEN_HEIGHT*0.9), 120, 40, "Sinusoidal", (200, 50, 0))
