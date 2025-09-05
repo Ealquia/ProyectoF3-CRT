@@ -246,8 +246,8 @@ def main():
             freq_v = sliders["freq_v"].val # Frecuencia 'b'
             phase = sliders["phase"].val  # Desfase 'δ'
 
-            Vh = amp * np.cos(2 * np.pi * freq_h * sim_time)
-            Vv = amp * np.cos(2 * np.pi * freq_v * sim_time + phase)
+            Vh = amp * np.cos(2 * np.pi * freq_h * sim_time + phase)
+            Vv = amp * np.cos(2 * np.pi * freq_v * sim_time )
 
         # --- CÁLCULOS FÍSICOS Y DE ESCALA ---
         trajectory = crt_physics.calculate_trajectory(Va, Vh, Vv)
