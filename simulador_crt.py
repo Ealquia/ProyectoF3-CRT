@@ -16,7 +16,7 @@ TOTAL_LENGTH = GUN_TO_PLATES_DIST + DEFLECT_PLATE_LENGTH + PLATE_TO_SCREEN_DIST
 
 # --- CONFIGURACIÓN DE LA PANTALLA Y LA INTERFAZ ---
 info = pygame.display.Info()
-SCREEN_WIDTH, SCREEN_HEIGHT = info.current_w, info.current_h # Aumentada la altura para mejor espaciado
+SCREEN_WIDTH, SCREEN_HEIGHT = info.current_w, info.current_h # ajuste de la resolución a la pantalla
 UI_X_START = 1050
 UI_WIDTH = SCREEN_WIDTH - UI_X_START - 50
 BG_COLOR = (10, 10, 30)
