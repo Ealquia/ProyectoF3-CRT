@@ -199,7 +199,7 @@ def main():
     # Definición de las áreas de dibujo
     side_rect = pygame.Rect(50, 50, int(SCREEN_WIDTH * 0.6), int(SCREEN_HEIGHT * 0.2))
     top_rect = pygame.Rect(50, side_rect.bottom + 20, int(SCREEN_WIDTH * 0.6), int(SCREEN_HEIGHT * 0.2))
-    front_rect = pygame.Rect(50, top_rect.bottom + 20, int(SCREEN_HEIGHT * 0.4), int(SCREEN_HEIGHT * 0.4))
+    front_rect = pygame.Rect(50, top_rect.bottom + 20, float(SCREEN_WIDTH * 0.3), float(SCREEN_HEIGHT * 0.4))
 
     # Controles de la UI (Interfaz de Usuario)
     sliders = {
