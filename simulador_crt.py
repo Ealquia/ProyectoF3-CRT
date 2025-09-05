@@ -38,6 +38,9 @@ class CRT:
         Esta es una implementación precisa basada en cinemática.
         """
         if Va <= 0: return 0
+
+        if Va <= 0 or Va < 1e-3:
+            return 0
         # Velocidad inicial del electrón debida al voltaje de aceleración
         v_x = np.sqrt(2 * E_CHARGE * Va / E_MASS)
         
@@ -64,6 +67,9 @@ class CRT:
     def calculate_trajectory(self, Va, Vh, Vv, num_points=100):
         """Calcula la trayectoria completa del electrón (puntos x, y, z) a través del tubo."""
         if Va <= 0: return [(x, 0, 0) for x in np.linspace(0, TOTAL_LENGTH, num_points)]
+
+        if Va <= 0 or Va < 1e-3:
+            return [(x, 0, 0) for x in np.linspace(0, TOTAL_LENGTH, num_points)]
         
         v_x = np.sqrt(2 * E_CHARGE * Va / E_MASS)
         a_vertical = (E_CHARGE * (Vv / PLATE_SEPARATION)) / E_MASS 
@@ -145,23 +151,41 @@ def draw_side_view(screen, font, title, rect, trajectory, view_type, max_deflect
     points_to_draw = [(rect.x + p[0] * x_scale, rect.centery - p[deflection_index] * y_scale) for p in trajectory]
     if len(points_to_draw) > 1: pygame.draw.aalines(screen, BEAM_COLOR, False, points_to_draw)
 
-def draw_front_view(screen, font, title, rect, points_on_screen, current_point):
+def draw_front_view(screen, font, title, rect, points_on_screen, current_point, Va):
     """Dibuja la pantalla del CRT con el rastro de persistencia."""
     pygame.draw.rect(screen, VIEW_BG_COLOR, rect, border_radius=60); pygame.draw.rect(screen, VIEW_BORDER_COLOR, rect, 2, border_radius=60)
     screen.blit(font.render(title, True, TEXT_COLOR), (rect.x + 10, rect.y + 5))
     
     # Dibuja los puntos antiguos (la persistencia)
-    for point in points_on_screen:
-        # Los puntos ya están en coordenadas locales, solo hay que añadir el offset del 'rect'
+    for point, va_at_impact in points_on_screen:
         final_pos = (point[0] + rect.x, point[1] + rect.y)
         if rect.collidepoint(final_pos):
-            pygame.draw.circle(screen, BEAM_COLOR, final_pos, 2)
+            # Normaliza el brillo según el rango del slider
+            Va_min = 2000
+            Va_max = 3000
+            r = int((va_at_impact - Va_min) / (Va_max - Va_min) * 255)
+            b = int((va_at_impact - Va_min) / (Va_max - Va_min) * 150)
+            r = max(0, min(r, 255))
+            b = max(0, min(b, 255))
+            trail_color = (r, 255, b)
+            pygame.draw.circle(screen, trail_color, final_pos, 2)
     
     # Dibuja el punto de impacto actual más brillante
     if current_point:
         current_pos = (current_point[0] + rect.x, current_point[1] + rect.y)
         if rect.collidepoint(current_pos):
-            pygame.draw.circle(screen, CURRENT_IMPACT_COLOR, current_pos, 4)
+            # Obtener rango dinámico del slider
+            Va_min = 2000
+            Va_max = 3000
+
+            # Normalizar y limitar los valores de color
+            r = int((Va - Va_min) / (Va_max - Va_min) * 255)
+            b = int((Va - Va_min) / (Va_max - Va_min) * 150)
+            r = max(0, min(r, 255))
+            b = max(0, min(b, 255))
+
+            impact_color = (r, 255, b)
+            pygame.draw.circle(screen, impact_color, current_pos, 4)
 
 def main():
     pygame.init()
@@ -207,6 +231,8 @@ def main():
         btn_manual.is_active, btn_sinusoidal.is_active = (mode == "Manual"), (mode == "Sinusoidal")
 
         Va = sliders["Va"].val
+        Va_min = sliders["Va"].min_val
+        Va_max = sliders["Va"].max_val
         if mode == "Manual":
             Vh, Vv = sliders["Vh_manual"].val, sliders["Vv_manual"].val
         else: # Modo Sinusoidal
@@ -236,7 +262,7 @@ def main():
         pixel_y = front_rect.height / 2 - final_point_m[1] * front_view_scale
         
         current_point = (pixel_z, pixel_y)
-        points_on_screen.append(current_point)
+        points_on_screen.append((current_point, Va))
         
         max_points = int(sliders["persistence"].val)
         if len(points_on_screen) > max_points:
@@ -246,7 +272,7 @@ def main():
         screen.fill(BG_COLOR)
         draw_side_view(screen, font, "Vista Superior (Deflexión Horizontal Z)", top_rect, trajectory, 'top', max_deflect_m)
         draw_side_view(screen, font, "Vista Lateral (Deflexión Vertical Y)", side_rect, trajectory, 'side', max_deflect_m)
-        draw_front_view(screen, font, "Pantalla (Vista Frontal)", front_rect, points_on_screen, current_point)
+        draw_front_view(screen, font, "Pantalla (Vista Frontal)", front_rect, points_on_screen, current_point, Va)
         for s in sliders.values(): s.draw(screen, font)
         btn_manual.draw(screen, font); btn_sinusoidal.draw(screen, font)
 
